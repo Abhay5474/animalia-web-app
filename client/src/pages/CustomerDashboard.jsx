@@ -16,7 +16,7 @@ export default function CustomerDashboard() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/analytics/impact');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics/impact`);
       setAnalyticsData(res.data);
     } catch (err) {
       console.error(err);
@@ -26,7 +26,7 @@ export default function CustomerDashboard() {
   const fetchUserPoints = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/auth/me', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPoints(res.data.rescuePoints || 0);

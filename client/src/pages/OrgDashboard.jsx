@@ -41,7 +41,7 @@ export default function OrgDashboard() {
   const fetchInjuries = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/injuries', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/injuries`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setInjuries(res.data);
@@ -55,7 +55,7 @@ export default function OrgDashboard() {
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/injuries/${id}/status`, { status }, {
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/injuries/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchInjuries();
@@ -68,7 +68,7 @@ export default function OrgDashboard() {
     if (!window.confirm('Are you sure you want to delete this injury report?')) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/injuries/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/injuries/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchInjuries();
@@ -81,7 +81,7 @@ export default function OrgDashboard() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/clinics', { 
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/clinics`, { 
         name: clinicName, 
         phone: clinicPhone, 
         address: clinicAddress,
@@ -131,7 +131,7 @@ export default function OrgDashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/adoptions', formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/adoptions`, formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -215,7 +215,7 @@ export default function OrgDashboard() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {injuries.map(inj => (
                   <div key={inj._id} className="glass-panel" style={{ padding: '1rem', background: 'var(--bg-color)' }}>
-                    <img src={`http://localhost:5000${inj.imageUrl}`} alt="injury" style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} />
+                    <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${inj.imageUrl}`} alt="injury" style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} />
                     <p><strong>Severity:</strong> <span style={{ color: inj.severity === 'high' ? 'var(--danger)' : inj.severity === 'medium' ? 'var(--accent-color)' : 'var(--success)' }}>{inj.severity.toUpperCase()}</span></p>
                     <p style={{ fontSize: '0.9rem' }}><strong>Location:</strong> {inj.latitude}, {inj.longitude}</p>
                     <p style={{ fontSize: '0.9rem' }}><strong>Reported By:</strong> {inj.reportedBy?.email || 'Unknown'}</p>

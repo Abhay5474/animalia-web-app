@@ -19,7 +19,7 @@ export default function Adoptions() {
   const fetchAdoptions = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/adoptions', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/adoptions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAdoptions(res.data);
@@ -49,7 +49,7 @@ export default function Adoptions() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/adoptions', formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/adoptions`, formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -70,7 +70,7 @@ export default function Adoptions() {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/adoptions/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/adoptions/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchAdoptions();
@@ -145,7 +145,7 @@ export default function Adoptions() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
               {adoptions.map(adopt => (
                 <div key={adopt._id} className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
-                  <img src={`http://localhost:5000${adopt.imageUrl}`} alt="Animal" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
+                  <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${adopt.imageUrl}`} alt="Animal" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
                   <div style={{ padding: '1.5rem' }}>
                     <p style={{ color: 'var(--text-light)', marginBottom: '0.5rem' }}>{adopt.description}</p>
                     <p style={{ fontSize: '0.85rem', color: 'var(--primary-color)', marginBottom: '1rem' }}>Contact: {adopt.contactDetails || adopt.postedBy?.email}</p>

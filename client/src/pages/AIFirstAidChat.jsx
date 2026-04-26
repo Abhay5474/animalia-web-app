@@ -98,7 +98,7 @@ export default function AIFirstAidChat() {
         const formData = new FormData();
         formData.append('image', currentFile);
         
-        const res = await axios.post('http://localhost:5000/api/injuries/analyze', formData, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/injuries/analyze`, formData, {
           headers: { 
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ export default function AIFirstAidChat() {
 
       } else {
         // Text Only Chat Pipeline
-        const res = await axios.post('http://localhost:5000/api/chat', { message: currentInput }, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/chat`, { message: currentInput }, {
             headers: { Authorization: `Bearer ${token}` }
         });
         botResponseText = res.data.reply;

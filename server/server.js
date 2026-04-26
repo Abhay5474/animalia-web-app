@@ -18,7 +18,9 @@ const Clinic = require('./models/Clinic');
 const Adoption = require('./models/Adoption');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://animalia-web-app.vercel.app']
+}));
 app.use(express.json({ limit: '50mb' }));
 
 // Directories
