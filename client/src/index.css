@@ -104,6 +104,10 @@ a:hover {
   align-items: center;
 }
 
+.mobile-menu-btn {
+  display: none !important;
+}
+
 /* Glassmorphism Panels */
 .glass-panel {
   background: var(--bg-panel);
@@ -267,4 +271,84 @@ h3 { font-size: 1.25rem; }
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .heading-gradient {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.8rem 1.25rem;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+  
+  .dashboard-header {
+    justify-content: center !important;
+    text-align: center;
+  }
+
+  .dashboard-header div {
+    min-width: 100% !important;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    right: 0;
+    background: var(--bg-panel);
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1.5rem;
+    transform: translateY(-120%);
+    transition: transform 0.4s ease;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+
+  .nav-links.active {
+    transform: translateY(0);
+  }
+
+  .nav-links .btn {
+    width: 100%;
+  }
+
+  .page-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .heading-gradient {
+    font-size: 1.8rem;
+  }
+
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.6rem; }
+
+  .glass-panel {
+    padding: 1.25rem;
+  }
+
+  /* Increase touch targets for mobile */
+  .btn {
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .brand {
+    font-size: 1.25rem;
+  }
 }

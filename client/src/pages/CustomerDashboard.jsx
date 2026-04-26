@@ -37,15 +37,15 @@ export default function CustomerDashboard() {
 
   return (
     <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <div>
+      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+        <div style={{ flex: '1', minWidth: '300px' }}>
           <h1 className="heading-gradient" style={{ marginBottom: '0.5rem' }}>Customer Dashboard</h1>
           <p style={{ color: 'var(--text-main)', margin: 0, fontSize: '1.2rem' }}>Welcome back, <strong style={{ color: 'var(--primary-color)' }}>{user?.email}</strong>!</p>
         </div>
         
-        <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--success)', padding: '1rem 2.5rem', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 15px rgba(34, 197, 94, 0.15)' }}>
-          <p style={{ margin: 0, textTransform: 'uppercase', color: 'var(--text-muted)', fontSize: '0.85rem', letterSpacing: '1.5px', fontWeight: 'bold' }}>Rescue Points</p>
-          <h2 style={{ color: 'var(--success)', margin: '0.5rem 0 0 0', fontSize: '2.8rem' }}>{points}</h2>
+        <div className="points-badge" style={{ background: 'var(--bg-panel)', border: '1px solid var(--success)', padding: '1rem 2rem', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 15px rgba(34, 197, 94, 0.15)', minWidth: '180px' }}>
+          <p style={{ margin: 0, textTransform: 'uppercase', color: 'var(--text-muted)', fontSize: '0.75rem', letterSpacing: '1.5px', fontWeight: 'bold' }}>Rescue Points</p>
+          <h2 style={{ color: 'var(--success)', margin: '0.25rem 0 0 0', fontSize: '2.5rem' }}>{points}</h2>
         </div>
       </div>
       

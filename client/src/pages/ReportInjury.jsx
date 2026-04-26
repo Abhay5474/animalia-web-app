@@ -81,16 +81,16 @@ export default function ReportInjury() {
             {preview ? (
               <img src={preview} alt="Preview" style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', borderRadius: '8px', border: '1px solid var(--surface-light)' }} />
             ) : (
-              <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
-                <div style={{ flex: 1, height: '160px', border: '2px dashed var(--border-color)', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', cursor: 'pointer', background: 'rgba(14, 165, 233, 0.05)', transition: 'var(--transition)' }} onClick={() => document.getElementById('file-input').click()}>
-                  <Upload size={32} style={{ marginBottom: '0.5rem', color: 'var(--secondary-color)' }} />
-                  <p style={{ fontSize: '0.9rem', textAlign: 'center', margin: 0 }}>Upload Device Photo</p>
+                <div className="upload-options" style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'wrap' }}>
+                  <div style={{ flex: '1', minWidth: '140px', height: '160px', border: '2px dashed var(--border-color)', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', cursor: 'pointer', background: 'rgba(14, 165, 233, 0.05)', transition: 'var(--transition)' }} onClick={() => document.getElementById('file-input').click()}>
+                    <Upload size={32} style={{ marginBottom: '0.5rem', color: 'var(--secondary-color)' }} />
+                    <p style={{ fontSize: '0.9rem', textAlign: 'center', margin: 0 }}>Upload Device Photo</p>
+                  </div>
+                  <div style={{ flex: '1', minWidth: '140px', height: '160px', border: '2px dashed var(--border-color)', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.05)', transition: 'var(--transition)' }} onClick={() => document.getElementById('camera-input').click()}>
+                    <Camera size={32} style={{ marginBottom: '0.5rem', color: 'var(--success)' }} />
+                    <p style={{ fontSize: '0.9rem', textAlign: 'center', margin: 0 }}>Take Live Photo</p>
+                  </div>
                 </div>
-                <div style={{ flex: 1, height: '160px', border: '2px dashed var(--border-color)', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.05)', transition: 'var(--transition)' }} onClick={() => document.getElementById('camera-input').click()}>
-                  <Camera size={32} style={{ marginBottom: '0.5rem', color: 'var(--success)' }} />
-                  <p style={{ fontSize: '0.9rem', textAlign: 'center', margin: 0 }}>Take Live Photo</p>
-                </div>
-              </div>
             )}
             <input id="file-input" type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
             <input id="camera-input" type="file" accept="image/*" capture="environment" onChange={handleFileChange} style={{ display: 'none' }} />

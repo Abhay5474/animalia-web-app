@@ -9,7 +9,7 @@ import Adoptions from './pages/Adoptions';
 import Clinics from './pages/Clinics';
 import AIFirstAidChat from './pages/AIFirstAidChat';
 import TraumaAnalytics from './pages/TraumaAnalytics';
-import { PawPrint, LogOut, Home, AlertCircle, Heart, Stethoscope, MessageSquare } from 'lucide-react';
+import { PawPrint, LogOut, Home, AlertCircle, Heart, Stethoscope, MessageSquare, Menu, X } from 'lucide-react';
 
 function ProtectedRoute({ children, role }) {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -20,6 +20,7 @@ function ProtectedRoute({ children, role }) {
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -43,20 +44,34 @@ function App() {
         <div className="brand" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
           <PawPrint color="var(--primary-color)" /> Animalia
         </div>
-        <div className="nav-links">
+
+        <button 
+          className="btn btn-outline mobile-menu-btn" 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{ display: 'none', padding: '0.5rem', border: 'none' }}
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
           {user ? (
             <>
-              <Link to={user.role === 'org' ? '/org-dashboard' : '/dashboard'} className="btn btn-outline" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem'}}>
+              <Link 
+                to={user.role === 'org' ? '/org-dashboard' : '/dashboard'} 
+                className="btn btn-outline" 
+                onClick={() => setIsMenuOpen(false)}
+                style={{display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem'}}
+              >
                 <Home size={18} /> Home
               </Link>
-              <button className="btn" onClick={handleLogout} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem'}}>
+              <button className="btn" onClick={() => { handleLogout(); setIsMenuOpen(false); }} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem'}}>
                 <LogOut size={18} /> Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-outline">Login</Link>
-              <Link to="/register" className="btn">Register</Link>
+              <Link to="/login" className="btn btn-outline" onClick={() => setIsMenuOpen(false)}>Login</Link>
+              <Link to="/register" className="btn" onClick={() => setIsMenuOpen(false)}>Register</Link>
             </>
           )}
         </div>
