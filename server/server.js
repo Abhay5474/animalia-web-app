@@ -201,7 +201,7 @@ app.delete('/api/injuries/:id', authMiddleware, async (req, res) => {
 });
 
 // Use the GEMINI API Key from env for the new analyze route
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const getGeminiKey = () => process.env.GEMINI_API_KEY;
 
 app.post('/api/injuries/analyze', authMiddleware, upload.single('image'), async (req, res) => {
     try {
@@ -256,8 +256,11 @@ Format the response strictly in JSON:
 Only output the JSON text, nothing else, no markdown fences.`;
 
             try {
+                const key = getGeminiKey();
+                if (!key) throw new Error("GEMINI_API_KEY is not defined in environment variables");
+
                 const gemResponse = await axios.post(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
                     {
                         contents: [{ parts: [{ text: prompt }] }]
                     }
@@ -370,8 +373,13 @@ app.delete('/api/clinics/:id', authMiddleware, async (req, res) => {
 app.post('/api/chat', authMiddleware, async (req, res) => {
     try {
         const { message } = req.body;
+        if (!message || message.trim() === "") return res.status(400).json({ error: "Message cannot be empty" });
+
+        const key = getGeminiKey();
+        if (!key) throw new Error("GEMINI_API_KEY is not defined");
+
         const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
             {
                 contents: [{ parts: [{ text: message }] }]
             }
