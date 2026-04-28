@@ -200,8 +200,8 @@ app.delete('/api/injuries/:id', authMiddleware, async (req, res) => {
     }
 });
 
-// Use the GEMINI API Key from env for the new analyze route
-const getGeminiKey = () => process.env.GEMINI_API_KEY;
+// Use the GROQ API Key from env for the new analyze route
+const getGroqKey = () => process.env.GROQ_API_KEY;
 
 app.post('/api/injuries/analyze', authMiddleware, upload.single('image'), async (req, res) => {
     try {
@@ -238,8 +238,8 @@ app.post('/api/injuries/analyze', authMiddleware, upload.single('image'), async 
         else if (highestConfidence >= 25) severity = 'medium';
         else if (highestConfidence > 0) severity = 'low';
 
-        // 3. Gemini Call
-        let geminiResponse;
+        // 3. Groq Call
+        let aiResponse;
 
         if (injuryCount > 0) {
             const prompt = `You are a professional veterinary AI. We have analyzed an image of an animal and detected ${injuryCount} injury point(s). The highest confidence score from our vision model is ${highestConfidence.toFixed(1)}%, registering as an overall severity of ${severity.toUpperCase()}. Based on this highly technical data, please provide:
@@ -256,25 +256,32 @@ Format the response strictly in JSON:
 Only output the JSON text, nothing else, no markdown fences.`;
 
             try {
-                const key = getGeminiKey();
-                if (!key) throw new Error("GEMINI_API_KEY is not defined in environment variables");
+                const key = getGroqKey();
+                if (!key) throw new Error("GROQ_API_KEY is not defined in environment variables");
 
-                const gemResponse = await axios.post(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
+                const groqRes = await axios.post(
+                    'https://api.groq.com/openai/v1/chat/completions',
                     {
-                        contents: [{ parts: [{ text: prompt }] }]
+                        model: 'llama3-8b-8192',
+                        messages: [{ role: 'user', content: prompt }]
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${key}`,
+                            'Content-Type': 'application/json'
+                        }
                     }
                 );
 
-                let rawReply = gemResponse.data.candidates[0].content.parts[0].text;
+                let rawReply = groqRes.data.choices[0].message.content;
                 rawReply = rawReply.replace(/```json/g, '').replace(/```/g, '').trim();
-                geminiResponse = JSON.parse(rawReply);
+                aiResponse = JSON.parse(rawReply);
             } catch (err) {
-                console.error("Gemini failed:", err.message);
-                geminiResponse = { error: "Failed to generate AI response. Follow general safety protocols and seek a vet immediately." };
+                console.error("Groq failed:", err.message);
+                aiResponse = { error: "Failed to generate AI response. Follow general safety protocols and seek a vet immediately." };
             }
         } else {
-            geminiResponse = {
+            aiResponse = {
                 assessment: "No visible injuries were localized above our confidence threshold.",
                 first_aid_steps: ["Ensure the animal is comfortable and not stressed.", "Observe for behavioral anomalies.", "If you suspect internal issues, consult a vet."],
                 precautions: ["Always approach cautiously as stressed animals may be defensive."]
@@ -288,7 +295,7 @@ Only output the JSON text, nothing else, no markdown fences.`;
             predictions,
             imageSpecs,
             severity,
-            analysis: geminiResponse
+            analysis: aiResponse
         });
 
     } catch (err) {
@@ -369,23 +376,30 @@ app.delete('/api/clinics/:id', authMiddleware, async (req, res) => {
     }
 });
 
-// ----- GEMINI CHAT ENDPOINT -----
+// ----- GROQ CHAT ENDPOINT -----
 app.post('/api/chat', authMiddleware, async (req, res) => {
     try {
         const { message } = req.body;
         if (!message || message.trim() === "") return res.status(400).json({ error: "Message cannot be empty" });
 
-        const key = getGeminiKey();
-        if (!key) throw new Error("GEMINI_API_KEY is not defined");
+        const key = getGroqKey();
+        if (!key) throw new Error("GROQ_API_KEY is not defined");
 
         const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
+            'https://api.groq.com/openai/v1/chat/completions',
             {
-                contents: [{ parts: [{ text: message }] }]
+                model: 'llama3-8b-8192',
+                messages: [{ role: 'user', content: message }]
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json'
+                }
             }
         );
 
-        const reply = response.data.candidates[0].content.parts[0].text;
+        const reply = response.data.choices[0].message.content;
         res.json({ reply });
     } catch (err) {
         console.error(err.message);
